@@ -15,15 +15,26 @@ def _get_name(line: str, num_omit: int) -> str:
     if m:
         return m.group(0).strip()
     else:
-        raise Exception('Cannot extract function name')
+        return None
         
         
 def get_function_name(line: str) -> str:
-    return _get_name(line, 4)
+    if (name := _get_name(line, 4)):
+        return name
+    else:
+        raise Exception('Cannot extract function name')
 
 
 def get_class_name(line: str) -> str:
-    return _get_name(line, 5)
+    
+    # if the class inherits from another class
+    if (name := _get_name(line, 6)):
+        return name
+    
+    # if the class does not inherit from another class
+    line = line.strip()
+    # omit the leading 'class ' and trailing ':'
+    return line[6:-1]
     
 
 def get_body(line: str) -> List:
